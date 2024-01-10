@@ -11,7 +11,7 @@ name: Check branch permissions
 
 jobs:
   check_branch:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
     - name: Check source branch if target is staging
       if: ${{ github.base_ref == 'TEST' }}
