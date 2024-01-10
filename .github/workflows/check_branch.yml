@@ -1,0 +1,29 @@
+# Ensures only TEST can merge into PROD,
+# and only DEV can merge into TEST
+
+on:
+  pull_request:
+    branches:
+    - TEST
+    - PROD
+
+name: Check branch permissions
+
+jobs:
+  check_branch:
+    runs-on: self-hosted
+    steps:
+    - name: Check source branch if target is staging
+      if: ${{ github.base_ref == 'TEST' }}
+      run: |
+        if [[ '${{ github.head_ref }}' != 'DEV' ]]; then
+          echo 'You can only open a PR from DEV into TEST!'
+          exit 1
+        fi
+    - name: Check source branch if target is prod
+      if: ${{ github.base_ref == 'PROD' }}
+      run: |
+        if [[ '${{ github.head_ref }}' != 'TEST' ]]; then
+          echo 'You can only open a PR from TEST into PROD!'
+          exit 1
+        fi
