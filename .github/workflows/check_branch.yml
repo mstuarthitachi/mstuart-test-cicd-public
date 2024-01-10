@@ -1,5 +1,6 @@
 # Ensures only TEST can merge into PROD,
 # and only DEV can merge into TEST
+# This action uses the standard GitHub runner.
 
 on:
   pull_request:
