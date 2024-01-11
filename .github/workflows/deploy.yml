@@ -17,13 +17,13 @@ on:
 name: Deploy code to an environment
 
 env:
-  DEV_URL: https://adb-45316833171050.10.azuredatabricks.net
-  TEST_URL: https://adb-6100933984890125.5.azuredatabricks.net
-  PROD_URL: https://adb-8455016620560129.9.azuredatabricks.net
+  DEV_URL: https://adb-2942084783280094.14.azuredatabricks.net
+  TEST_URL: https://adb-6989291269021872.12.azuredatabricks.net
+  PROD_URL: https://adb-5328330755793276.16.azuredatabricks.net
 
 jobs:
   deploy_code:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
       - run: echo "🍏 This job's status is ${{ job.status }}."
