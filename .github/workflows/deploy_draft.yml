@@ -40,3 +40,5 @@ jobs:
       id: create_deployment
       with:
         token: ${{ github.token }}
+        route: POST /repos/{repository}/deployments
+        repository: ${{ github.repository }}
