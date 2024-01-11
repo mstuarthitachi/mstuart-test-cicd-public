@@ -8,7 +8,17 @@
 #    }
 
 on:
-  workflow_dispatch
+  workflow_dispatch:
+    inputs:  
+      environment:
+        description: Environment to deploy to
+        required: true
+        type: choice
+        options:
+        - DEV
+        - TEST
+        - PROD
+        default: DEV
 
 name: Deploy code to an environment (manual trigger)
 
@@ -34,32 +44,12 @@ jobs:
         repository: ${{ github.repository }}
         ref: ${{ github.ref }}
         auto_merge: false
-        required_contexts: '[]'
-        environment: ${{ github.ref_name }}
-        description: Deploy ${{ github.repository }} to ${{ github.ref_name }}
-    - name: Mark the deployment as In Progress
-      uses: octokit/request-action@v2.1.0
-      with:
-        token: ${{ github.token }}
-        route: POST /repos/{repository}/deployments/{deployment_id}/statuses
-        repository: ${{ github.repository }}
-        # need this for in_progress and environment
-        mediaType: |
-          previews:
-            - flash
-        deployment_id: ${{ fromJson(steps.create_deployment.outputs.data).id }}
-        state: in_progress
-        target_url: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
-        environment: ${{ github.ref_name }}
-    - name: Install Python dependencies
-      run: pip install requests mlflow
-    - name: Make repos folder
-      run: mkdir -p repos
-    - name: Check out mstuart-test-cicd-public repo
-      uses: actions/checkout@v3
-      with:
-        path: repos/mstuart-test-cicd-public
-        ref: ${{ github.ref_name }}
+        # MSTUART
+        # required_contexts: '[]'
+        # environment: ${{ github.ref_name }}
+        # description: Deploy ${{ github.repository }} to ${{ github.ref_name }}
+        environment: ${{ github.event.inputs.environment }}
+        description: Deploy ${{ github.repository }} to ${{ github.event.inputs.environment }}
     - name: Log final deployment status
       if: always()
       uses: octokit/request-action@v2.1.0
