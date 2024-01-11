@@ -10,7 +10,7 @@
 on:
   workflow_dispatch
 
-name: Deploy code to an environment
+name: Deploy code to an environment (manual trigger)
 
 env:
   DEV_URL: https://adb-2942084783280094.14.azuredatabricks.net
