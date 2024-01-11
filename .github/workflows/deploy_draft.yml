@@ -19,16 +19,8 @@ env:
 
 jobs:
   deploy_code:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
-    - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
-    - run: echo "The value of github.token is ${{ github.token }}"
-    - run: echo "The value of github.repository is ${{ github.repository }}"
-    - run: echo "The value of github.ref is ${{ github.ref }}"
-    - run: echo "The value of github.ref_name is ${{ github.ref_name }}"
-    - run: echo "The value of github.run_id is ${{ github.run_id }}"      
-    - run: echo "🍏 This job's status is ${{ job.status }}."
-
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
@@ -63,13 +55,11 @@ jobs:
       run: pip install requests mlflow
     - name: Make repos folder
       run: mkdir -p repos
-    - name: Check out ${{ github.repository }} repo
+    - name: Check out mstuart-test-cicd-public repo
       uses: actions/checkout@v3
       with:
-        path: repos/${{ github.repository }}
+        path: repos/mstuart-test-cicd-public
         ref: ${{ github.ref_name }}
-
-
     - name: Log final deployment status
       if: always()
       uses: octokit/request-action@v2.1.0
