@@ -38,7 +38,8 @@ jobs:
         repository: ${{ github.repository }}
         ref: ${{ github.ref }}
         auto_merge: false
-        required_contexts: '[]'
+        # MSTUART
+        # required_contexts: '[]'
         environment: ${{ github.ref_name }}
         description: Deploy ${{ github.repository }} to ${{ github.ref_name }}
     - name: Mark the deployment as In Progress
