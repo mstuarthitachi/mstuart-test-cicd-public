@@ -1,0 +1,25 @@
+# PREREQUISITES: 
+# 1. Add secrets to this repo called DEV_CREDENTIALS, TEST_CREDENTIALS, and
+#    PROD_CREDENTIALS. Each secret should be formatted like this:
+#    {
+#      "clientId": "...",
+#      "clientSecret": "...",
+#      "tenantId": "..."
+#    }
+
+on:
+  workflow_dispatch
+
+name: Deploy code to an environment
+
+env:
+  DEV_URL: https://adb-2942084783280094.14.azuredatabricks.net
+  TEST_URL: https://adb-6989291269021872.12.azuredatabricks.net
+  PROD_URL: https://adb-5328330755793276.16.azuredatabricks.net
+
+jobs:
+  deploy_code:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
+      - run: echo "🍏 This job's status is ${{ job.status }}."
