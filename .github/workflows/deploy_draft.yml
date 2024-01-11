@@ -9,7 +9,7 @@
 
 on:
   workflow_dispatch:
-    inputs:  
+    inputs:
       environment:
         description: Environment to deploy to
         required: true
@@ -50,14 +50,3 @@ jobs:
         # description: Deploy ${{ github.repository }} to ${{ github.ref_name }}
         environment: ${{ github.event.inputs.environment }}
         description: Deploy ${{ github.repository }} to ${{ github.event.inputs.environment }}
-    - name: Log final deployment status
-      if: always()
-      uses: octokit/request-action@v2.1.0
-      with:
-        token: ${{ github.token }}
-        route: POST /repos/{repository}/deployments/{deployment_id}/statuses
-        repository: ${{ github.repository }}
-        deployment_id: ${{ fromJson(steps.create_deployment.outputs.data).id }}
-        state: ${{ job.status }}
-        target_url: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
-        environment: ${{ github.ref_name }}
