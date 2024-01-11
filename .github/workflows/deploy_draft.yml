@@ -37,3 +37,6 @@ jobs:
         python-version: 3.8
     - name: Tell Github a deployment is happening
       uses: octokit/request-action@v2.1.0
+      id: create_deployment
+      with:
+        token: ${{ github.token }}
