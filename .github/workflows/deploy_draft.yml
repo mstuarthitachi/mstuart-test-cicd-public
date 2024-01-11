@@ -21,10 +21,63 @@ jobs:
   deploy_code:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
-      - run: echo "The value of github.token is ${{ github.token }}"
-      - run: echo "The value of github.repository is ${{ github.repository }}"
-      - run: echo "The value of github.ref is ${{ github.ref }}"
-      - run: echo "The value of github.ref_name is ${{ github.ref_name }}"
-      - run: echo "The value of github.run_id is ${{ github.run_id }}"      
-      - run: echo "🍏 This job's status is ${{ job.status }}."
+    - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
+    - run: echo "The value of github.token is ${{ github.token }}"
+    - run: echo "The value of github.repository is ${{ github.repository }}"
+    - run: echo "The value of github.ref is ${{ github.ref }}"
+    - run: echo "The value of github.ref_name is ${{ github.ref_name }}"
+    - run: echo "The value of github.run_id is ${{ github.run_id }}"      
+    - run: echo "🍏 This job's status is ${{ job.status }}."
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+    - name: Tell Github a deployment is happening
+      uses: octokit/request-action@v2.1.0
+      id: create_deployment
+      with:
+        token: ${{ github.token }}
+        route: POST /repos/{repository}/deployments
+        repository: ${{ github.repository }}
+        ref: ${{ github.ref }}
+        auto_merge: false
+        required_contexts: '[]'
+        environment: ${{ github.ref_name }}
+        description: Deploy ${{ github.repository }} to ${{ github.ref_name }}
+    - name: Mark the deployment as In Progress
+      uses: octokit/request-action@v2.1.0
+      with:
+        token: ${{ github.token }}
+        route: POST /repos/{repository}/deployments/{deployment_id}/statuses
+        repository: ${{ github.repository }}
+        # need this for in_progress and environment
+        mediaType: |
+          previews:
+            - flash
+        deployment_id: ${{ fromJson(steps.create_deployment.outputs.data).id }}
+        state: in_progress
+        target_url: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        environment: ${{ github.ref_name }}
+    - name: Install Python dependencies
+      run: pip install requests mlflow
+    - name: Make repos folder
+      run: mkdir -p repos
+    - name: Check out data_science_566 repo
+      uses: actions/checkout@v3
+      with:
+        path: repos/data_science_566
+        ref: ${{ github.ref_name }}
+
+
+    - name: Log final deployment status
+      if: always()
+      uses: octokit/request-action@v2.1.0
+      with:
+        token: ${{ github.token }}
+        route: POST /repos/{repository}/deployments/{deployment_id}/statuses
+        repository: ${{ github.repository }}
+        deployment_id: ${{ fromJson(steps.create_deployment.outputs.data).id }}
+        state: ${{ job.status }}
+        target_url: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        environment: ${{ github.ref_name }}
