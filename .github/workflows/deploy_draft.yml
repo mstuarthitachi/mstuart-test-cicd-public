@@ -63,10 +63,10 @@ jobs:
       run: pip install requests mlflow
     - name: Make repos folder
       run: mkdir -p repos
-    - name: Check out data_science_566 repo
+    - name: Check out ${{ github.repository }} repo
       uses: actions/checkout@v3
       with:
-        path: repos/data_science_566
+        path: repos/${{ github.repository }}
         ref: ${{ github.ref_name }}
 
 
