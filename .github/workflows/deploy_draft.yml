@@ -8,17 +8,7 @@
 #    }
 
 on:
-  workflow_dispatch:
-    inputs:
-      environment:
-        description: Environment to deploy to
-        required: true
-        type: choice
-        options:
-        - DEV
-        - TEST
-        - PROD
-        default: DEV
+  workflow_dispatch
 
 name: Deploy code to an environment (manual trigger)
 
@@ -42,3 +32,54 @@ jobs:
         token: ${{ github.token }}
         route: POST /repos/{repository}/deployments
         repository: ${{ github.repository }}
+        ref: ${{ github.ref }}
+        auto_merge: false
+        required_contexts: '[]'
+        environment: ${{ github.ref_name }}
+        description: Deploy ${{ github.repository }} to ${{ github.ref_name }}
+    - name: Mark the deployment as In Progress
+      uses: octokit/request-action@v2.1.0
+      with:
+        token: $${{ github.token }}
+        route: POST /repos/{repository}/deployments/{deployment_id}/statuses
+        repository: ${{ github.repository }}
+        # need this for in_progress and environment
+        mediaType: |
+          previews:
+            - flash
+        deployment_id: ${{ fromJson(steps.create_deployment.outputs.data).id }}
+        state: in_progress
+        target_url: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        environment: ${{ github.ref_name }}
+    - name: Install Python dependencies
+      run: pip install requests mlflow
+    - name: Make repos folder
+      run: mkdir -p repos
+    - name: Check out mstuart-test-cicd-public repo
+      uses: actions/checkout@v3
+      with:
+        path: repos/mstuart-test-cicd-public
+        ref: ${{ github.ref_name }}
+
+    # - name: Run the deployment script
+    #   run: |
+    #     pushd repos 
+    #     python data_science_566/ci/deploy.py \
+    #       --client-id '${{ fromJSON(secrets[format('{0}_CREDENTIALS', github.ref_name)]).clientId }}' \
+    #       --client-secret '${{ fromJSON(secrets[format('{0}_CREDENTIALS', github.ref_name)]).clientSecret }}' \
+    #       --tenant-id '${{ fromJSON(secrets[format('{0}_CREDENTIALS', github.ref_name)]).tenantId }}' \
+    #       --databricks-url '${{ env[format('{0}_URL', github.ref_name)] }}' \
+    #       --environment '${{ format('{0}', github.ref_name) }}'
+    #     popd
+
+    - name: Log final deployment status
+      if: always()
+      uses: octokit/request-action@v2.1.0
+      with:
+        token: ${{ github.token }}
+        route: POST /repos/{repository}/deployments/{deployment_id}/statuses
+        repository: ${{ github.repository }}
+        deployment_id: ${{ fromJson(steps.create_deployment.outputs.data).id }}
+        state: ${{ job.status }}
+        target_url: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        environment: ${{ github.ref_name }}
