@@ -35,18 +35,3 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: 3.8
-    - name: Tell Github a deployment is happening
-      uses: octokit/request-action@v2.1.0
-      id: create_deployment
-      with:
-        token: ${{ github.token }}
-        route: POST /repos/{repository}/deployments
-        repository: ${{ github.repository }}
-        ref: ${{ github.ref }}
-        auto_merge: false
-        # MSTUART
-        # required_contexts: '[]'
-        # environment: ${{ github.ref_name }}
-        # description: Deploy ${{ github.repository }} to ${{ github.ref_name }}
-        environment: ${{ github.event.inputs.environment }}
-        description: Deploy ${{ github.repository }} to ${{ github.event.inputs.environment }}
