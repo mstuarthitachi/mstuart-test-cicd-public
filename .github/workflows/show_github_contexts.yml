@@ -1,0 +1,19 @@
+# Print the values in some of the GitHub contexts
+
+on:
+  workflow_dispatch
+
+name: Print GitHub context values
+
+jobs:
+  show_contexts:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
+      - run: echo "github.repository value is ${{ github.repository }}"
+      - run: echo "github.token value is ${{ github.token }}"
+      - run: echo "github.ref_name value is ${{ github.ref_name }}"
+      - run: echo "github.ref value is ${{ github.ref }}"
+      - run: echo "github.run_id value is ${{ github.run_id }}"
+      - run: echo "🍏 This job's status is ${{ job.status }}."
+  
