@@ -10,13 +10,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
+      - run: echo "Values in the github object"
       - run: echo "github.repository value is ${{ github.repository }}"
       - run: echo "github.token value is ${{ github.token }}"
       - run: echo "github.ref_name value is ${{ github.ref_name }}"
       - run: echo "github.ref value is ${{ github.ref }}"
       - run: echo "github.run_id value is ${{ github.run_id }}"
+      - run: echo "Values in the github.event object"
       - run: echo "github.event.repository value is ${{ github.event.repository }}"
       - run: echo "github.event.repository.name value is ${{ github.event.repository.name }}"
       - run: echo "github.event.repository.id value is ${{ github.event.repository.id }}"
+      - run: echo "Values in the github.secret object"
+      - run: echo "secret PROD_CREDENTIALS.clientId value is ${{ fromJSON(secrets[format('{0}_CREDENTIALS', github.ref_name)]).clientId }}"
+      - run: echo "secret TEST_CREDENTIALS.clientId value is ${{ fromJSON(secrets[TEST_CREDENTIALS]).clientId }}"
       - run: echo "🍏 This job's status is ${{ job.status }}."
   
