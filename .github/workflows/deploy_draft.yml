@@ -64,7 +64,7 @@ jobs:
       - name: Run the deployment script
         run: |
           pushd repos 
-          python ${{ github.event.repository.name }}/example_ml_project/ci/deploy.py \
+          python ${{ github.event.repository.name }}/example_ml_project/notebooks/ci/deploy.py \
             --client-id '${{ fromJSON(secrets[format('{0}_CREDENTIALS', github.ref_name)]).clientId }}' \
             --client-secret '${{ fromJSON(secrets[format('{0}_CREDENTIALS', github.ref_name)]).clientSecret }}' \
             --tenant-id '${{ fromJSON(secrets[format('{0}_CREDENTIALS', github.ref_name)]).tenantId }}' \
