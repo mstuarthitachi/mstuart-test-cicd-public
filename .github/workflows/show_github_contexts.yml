@@ -22,6 +22,6 @@ jobs:
       - run: echo "github.event.repository.id value is ${{ github.event.repository.id }}"
       - run: echo "Values in the github.secret object"
       - run: echo "secret PROD_CREDENTIALS.clientId value is ${{ fromJSON(secrets[format('{0}_CREDENTIALS', github.ref_name)]).clientId }}"
-      - run: echo "secret TEST_CREDENTIALS.clientId value is ${{ fromJSON(secrets[TEST_CREDENTIALS]).clientId }}"
+      - run: echo "secret TEST_CREDENTIALS.clientId value is ${{ fromJSON(secrets['TEST_CREDENTIALS']).clientId }}"
       - run: echo "🍏 This job's status is ${{ job.status }}."
   
