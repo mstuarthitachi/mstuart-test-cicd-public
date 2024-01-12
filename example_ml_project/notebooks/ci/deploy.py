@@ -4,7 +4,7 @@ import shutil
 
 import api_client
 
-BASE_REPO_FOLDER = Path("/deployed")
+BASE_REPO_FOLDER = Path("/mstuart-deployed")
 OPS_NOTEBOOK_PATH = (
     BASE_REPO_FOLDER / "mstuart-test-cicd-public" / "example_ml_project" / "notebooks" / "operations" / "operations"
 )
