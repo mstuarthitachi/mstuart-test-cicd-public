@@ -58,19 +58,19 @@ jobs:
       - name: Check out mstuart-test-cicd-public repo
         uses: actions/checkout@v3
         with:
-          path: repos/mstuart-test-cicd-public
+          path: repos/${{ github.event.repository.name }}
           ref: ${{ github.ref_name }}
 
-    # - name: Run the deployment script
-    #   run: |
-    #     pushd repos 
-    #     python data_science_566/ci/deploy.py \
-    #       --client-id '${{ fromJSON(secrets[format('{0}_CREDENTIALS', github.ref_name)]).clientId }}' \
-    #       --client-secret '${{ fromJSON(secrets[format('{0}_CREDENTIALS', github.ref_name)]).clientSecret }}' \
-    #       --tenant-id '${{ fromJSON(secrets[format('{0}_CREDENTIALS', github.ref_name)]).tenantId }}' \
-    #       --databricks-url '${{ env[format('{0}_URL', github.ref_name)] }}' \
-    #       --environment '${{ format('{0}', github.ref_name) }}'
-    #     popd
+      - name: Run the deployment script
+        run: |
+          pushd repos 
+          python ${{ github.event.repository.name }}/example_ml_project/ci/deploy.py \
+            --client-id '${{ fromJSON(secrets[format('{0}_CREDENTIALS', github.ref_name)]).clientId }}' \
+            --client-secret '${{ fromJSON(secrets[format('{0}_CREDENTIALS', github.ref_name)]).clientSecret }}' \
+            --tenant-id '${{ fromJSON(secrets[format('{0}_CREDENTIALS', github.ref_name)]).tenantId }}' \
+            --databricks-url '${{ env[format('{0}_URL', github.ref_name)] }}' \
+            --environment '${{ format('{0}', github.ref_name) }}'
+          popd
 
       - name: Log final deployment status
         if: always()
