@@ -62,6 +62,14 @@ print(
     [str(repo) for repo in repos],
 )
 
+print("List all folders")
+p = Path('.')
+[x for x in p.iterdir() if x.is_dir()]
+
+print("List all folders again")
+p = Path('.')
+[print("folder ", str(x)) for x in p.iterdir() if x.is_dir()]
+
 print("List all files")
 list(Path(".").glob('**/*.*'))
 
