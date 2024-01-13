@@ -62,16 +62,16 @@ print(
     [str(repo) for repo in repos],
 )
 
-print("List all folders")
-p = Path('.')
-[x for x in p.iterdir() if x.is_dir()]
 
-print("List all folders again")
-p = Path('.')
-[print("folder ", str(x)) for x in p.iterdir() if x.is_dir()]
+print("Current working directory is", Path.cwd())
+
+print("List contents of current directory")
+for f in Path('.').iterdir():
+  print(f)
 
 print("List all files")
 list(Path(".").glob('**/*.*'))
+
 
 print("Deleting notebooks in the destination workspace")
 client.delete_remote_folder(folder_path=BASE_REPO_FOLDER)
