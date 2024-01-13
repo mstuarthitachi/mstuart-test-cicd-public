@@ -4,7 +4,7 @@ import shutil
 
 import api_client
 
-BASE_REPO_FOLDER = Path("/users/mstuart@hitachisolutions.com/mstuart_deployed")
+BASE_REPO_FOLDER = Path("/Users/mstuart@hitachisolutions.com/mstuart_deployed")
 OPS_NOTEBOOK_PATH = (
     BASE_REPO_FOLDER / "mstuart-test-cicd-public" / "example_ml_project" / "notebooks" / "operations" / "operations"
 )
@@ -44,6 +44,12 @@ client = api_client.DatabricksAPIClient(
     databricks_url=args.databricks_url
 
 )
+
+print("MSTUART")
+print(f"The value of BASE_REPO_FOLDER is {BASE_REPO_FOLDER}")
+print(f"The value of OPS_NOTEBOOK_PATH is {OPS_NOTEBOOK_PATH}")
+print(f"The value of path.parent is {path.parent}")
+
 repos = [
     path.parent
     for path in Path(".").glob("*/notebooks")
