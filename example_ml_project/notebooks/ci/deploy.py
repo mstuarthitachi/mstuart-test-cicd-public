@@ -45,11 +45,6 @@ client = api_client.DatabricksAPIClient(
 
 )
 
-print("MSTUART")
-print(f"The value of BASE_REPO_FOLDER is {BASE_REPO_FOLDER}")
-print(f"The value of OPS_NOTEBOOK_PATH is {OPS_NOTEBOOK_PATH}")
-print(f"The value of path.parent is {path.parent}")
-
 repos = [
     path.parent
     for path in Path(".").glob("*/notebooks")
@@ -59,6 +54,12 @@ print(
     "Found these repos with a notebooks folder that has at least one .py or .sql file in it:",
     [str(repo) for repo in repos],
 )
+
+print("MSTUART")
+print(f"The value of BASE_REPO_FOLDER is {BASE_REPO_FOLDER}")
+print(f"The value of OPS_NOTEBOOK_PATH is {OPS_NOTEBOOK_PATH}")
+print(f"The value of path.parent is {path.parent}")
+
 
 print("Deleting notebooks in the destination workspace")
 client.delete_remote_folder(folder_path=BASE_REPO_FOLDER)
