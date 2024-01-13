@@ -6,7 +6,7 @@ import api_client
 
 BASE_REPO_FOLDER = Path("/mstuart_deployed")
 OPS_NOTEBOOK_PATH = (
-    BASE_REPO_FOLDER / "mstuart-test-cicd-public" / "example_ml_project" / "notebooks" / "operations" / "operations"
+    BASE_REPO_FOLDER / "mstuart-test-cicd-public" / "notebooks" / "operations" / "operations"
 )
 JOB_NAME = "cicd_run_operations"
 
