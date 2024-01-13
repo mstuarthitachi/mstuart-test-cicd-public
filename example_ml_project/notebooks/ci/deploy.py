@@ -54,7 +54,9 @@ client = api_client.DatabricksAPIClient(
 
 repos = [
     path.parent
-    for path in Path(".").glob("*/notebooks")
+    for path in Path(".").glob("*/notebooks"):
+      print("path is", path)
+      print("str path is", str(path))
     if path.glob("**/*.py") or path.glob("**/*.sql")
 ]
 print(
