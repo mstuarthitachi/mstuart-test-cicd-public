@@ -54,15 +54,16 @@ client = api_client.DatabricksAPIClient(
 
 repos = [
     path.parent
-    for path in Path(".").glob("*/notebooks"):
-      print("path is", path)
-      print("str path is", str(path))
+    for path in Path(".").glob("*/notebooks")
     if path.glob("**/*.py") or path.glob("**/*.sql")
 ]
 print(
     "Found these repos with a notebooks folder that has at least one .py or .sql file in it:",
     [str(repo) for repo in repos],
 )
+
+print("List all files")
+list(Path(".").glob('**/*.*'))
 
 print("Deleting notebooks in the destination workspace")
 client.delete_remote_folder(folder_path=BASE_REPO_FOLDER)
