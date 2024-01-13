@@ -4,7 +4,7 @@ import shutil
 
 import api_client
 
-BASE_REPO_FOLDER = Path("/Users/mstuart@hitachisolutions.com/mstuart_deployed")
+BASE_REPO_FOLDER = Path("/mstuart_deployed")
 OPS_NOTEBOOK_PATH = (
     BASE_REPO_FOLDER / "mstuart-test-cicd-public" / "example_ml_project" / "notebooks" / "operations" / "operations"
 )
@@ -35,6 +35,13 @@ print(f"The value of tenant-id is {args.tenant_id}")
 print(f"The value of databricks-url is {args.databricks_url}")
 print(f"The value of environment is {args.environment}")
 
+print(f"The value of BASE_REPO_FOLDER is {BASE_REPO_FOLDER}")
+print(f"The value of OPS_NOTEBOOK_PATH is {OPS_NOTEBOOK_PATH}")
+
+print(f"You can find me here (parent): {Path(__file__).parent}!")
+print(f"You can find me here (myself): {Path(__file__)}!")
+
+
 environment=args.environment
 
 client = api_client.DatabricksAPIClient(
@@ -54,12 +61,6 @@ print(
     "Found these repos with a notebooks folder that has at least one .py or .sql file in it:",
     [str(repo) for repo in repos],
 )
-
-print("MSTUART")
-print(f"The value of BASE_REPO_FOLDER is {BASE_REPO_FOLDER}")
-print(f"The value of OPS_NOTEBOOK_PATH is {OPS_NOTEBOOK_PATH}")
-print(f"The value of path.parent is {path.parent}")
-
 
 print("Deleting notebooks in the destination workspace")
 client.delete_remote_folder(folder_path=BASE_REPO_FOLDER)
