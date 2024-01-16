@@ -26,7 +26,8 @@ jobs:
         with:
           python-version: 3.8
       - name: Tell Github a deployment is happening
-        uses: octokit/request-action@v2.1.0
+        # uses: octokit/request-action@v2.1.0
+        uses: octokit/request-action@v2.1.9
         id: create_deployment
         with:
           token: ${{ github.token }}
@@ -38,7 +39,8 @@ jobs:
           environment: ${{ github.ref_name }}
           description: Deploy ${{ github.repository }} to ${{ github.ref_name }}
       - name: Mark the deployment as In Progress
-        uses: octokit/request-action@v2.1.0
+        # uses: octokit/request-action@v2.1.0
+        uses: octokit/request-action@v2.1.9        
         with:
           token: ${{ github.token }}
           route: POST /repos/{repository}/deployments/{deployment_id}/statuses
@@ -74,7 +76,8 @@ jobs:
 
       - name: Log final deployment status
         if: always()
-        uses: octokit/request-action@v2.1.0
+        # uses: octokit/request-action@v2.1.0
+        uses: octokit/request-action@v2.1.9        
         with:
           token: ${{ github.token }}
           route: POST /repos/{repository}/deployments/{deployment_id}/statuses
