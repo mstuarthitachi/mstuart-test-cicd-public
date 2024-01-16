@@ -1,0 +1,89 @@
+# PREREQUISITES: 
+# 1. Add secrets to this repo called DEV_CREDENTIALS, TEST_CREDENTIALS, and
+#    PROD_CREDENTIALS. Each secret should be formatted like this:
+#    {
+#      "clientId": "...",
+#      "clientSecret": "...",
+#      "tenantId": "..."
+#    }
+
+on:
+  workflow_dispatch
+
+name: Deploy code to an environment (manual trigger)
+
+env:
+  DEV_URL: https://adb-2942084783280094.14.azuredatabricks.net
+  TEST_URL: https://adb-6989291269021872.12.azuredatabricks.net
+  PROD_URL: https://adb-5328330755793276.16.azuredatabricks.net
+
+jobs:
+  deploy_code:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Python
+        # uses: actions/setup-python@v2
+        uses: actions/setup-python@v5        
+        with:
+          python-version: 3.8
+      - name: Tell Github a deployment is happening
+        # uses: octokit/request-action@v2.1.0
+        uses: octokit/request-action@v2.1.9
+        id: create_deployment
+        with:
+          token: ${{ github.token }}
+          route: POST /repos/{repository}/deployments
+          repository: ${{ github.repository }}
+          ref: ${{ github.ref }}
+          auto_merge: false
+          required_contexts: '[]'
+          environment: ${{ github.ref_name }}
+          description: Deploy ${{ github.repository }} to ${{ github.ref_name }}
+      - name: Mark the deployment as In Progress
+        # uses: octokit/request-action@v2.1.0
+        uses: octokit/request-action@v2.1.9        
+        with:
+          token: ${{ github.token }}
+          route: POST /repos/{repository}/deployments/{deployment_id}/statuses
+          repository: ${{ github.repository }}
+          # need this for in_progress and environment
+          mediaType: |
+            previews:
+              - flash
+          deployment_id: ${{ fromJson(steps.create_deployment.outputs.data).id }}
+          state: in_progress
+          target_url: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          environment: ${{ github.ref_name }}
+      - name: Install Python dependencies
+        run: pip install requests mlflow
+      - name: Make repos folder
+        run: mkdir -p repos
+      - name: Check out mstuart-test-cicd-public repo
+        uses: actions/checkout@v3
+        with:
+          path: repos/${{ github.event.repository.name }}
+          ref: ${{ github.ref_name }}
+
+      - name: Run the deployment script
+        run: |
+          pushd repos 
+          python ${{ github.event.repository.name }}/ci/deploy.py \
+            --client-id '${{ fromJSON(secrets[format('{0}_CREDENTIALS', github.ref_name)]).clientId }}' \
+            --client-secret '${{ fromJSON(secrets[format('{0}_CREDENTIALS', github.ref_name)]).clientSecret }}' \
+            --tenant-id '${{ fromJSON(secrets[format('{0}_CREDENTIALS', github.ref_name)]).tenantId }}' \
+            --databricks-url '${{ env[format('{0}_URL', github.ref_name)] }}' \
+            --environment '${{ format('{0}', github.ref_name) }}'
+          popd
+
+      - name: Log final deployment status
+        if: always()
+        # uses: octokit/request-action@v2.1.0
+        uses: octokit/request-action@v2.1.9        
+        with:
+          token: ${{ github.token }}
+          route: POST /repos/{repository}/deployments/{deployment_id}/statuses
+          repository: ${{ github.repository }}
+          deployment_id: ${{ fromJson(steps.create_deployment.outputs.data).id }}
+          state: ${{ job.status }}
+          target_url: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          environment: ${{ github.ref_name }}
