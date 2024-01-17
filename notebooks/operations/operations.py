@@ -1,5 +1,5 @@
 # Databricks notebook source
-# MAGIC %md This is the highlevel notebook that will run operations for all models in the environment.
+# MAGIC %md This is the highlevel notebook that well run operations for all models in the environment.
 
 # COMMAND ----------
 
@@ -16,7 +16,4 @@ environment = dbutils.widgets.get("ENVIRONMENT").lower()
 # COMMAND ----------
 
 # DBTITLE 1,Kick off project operation notebooks
-# print("The environment is", environment)
-dbutils.notebook.run("../compressing_hours/operations", 1200, {
-    "ENVIRONMENT": environment
-})
+print("The environment is", environment)
